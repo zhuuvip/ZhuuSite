@@ -7,17 +7,9 @@ export default defineConfig({
   base: "/",
   plugins: [react(), tailwindcss()],
   resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "src"),
-    },
+    alias: { "@": path.resolve(__dirname, "src") },
     dedupe: ["react", "react-dom"],
   },
-  build: {
-    outDir: "dist",
-    emptyOutDir: true,
-  },
-  server: {
-    port: 5173,
-    host: true,
-  },
+  build: { outDir: "dist", emptyOutDir: true },
+  server: { port: 5173, host: true },
 });
