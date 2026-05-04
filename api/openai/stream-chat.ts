@@ -2,7 +2,7 @@ export const config = { runtime: "edge" };
 
 const SYSTEM_PROMPT = `You are Zhuu AI — a friendly, helpful assistant for ZhuuVIP. You speak both Indonesian and English fluently. Answer any question the user asks directly and accurately. For questions about ZhuuVIP specifically, use this info:
 - Donate: sociabuzz.com/zhuuvip/tribe
-- Buy/Order: wa.me/62882005730502  
+- Buy/Order: wa.me/62882005730502
 - Community (Circle Vendetta Noire): chat.whatsapp.com/LC8ybe9WPZAEYO2lkmN4X4
 - Tools info: whatsapp.com/channel/0029VaXLuPM002TGAkbWtb3G
 - Background music: Indila - Love Story
@@ -72,17 +72,17 @@ async function streamFallback(msg: string): Promise<Response> {
   let reply: string;
 
   if (/donate|donasi|support|sociabuzz/.test(lower)) {
-    reply = "Untuk donasi, kunjungi: **sociabuzz.com/zhuuvip/tribe** 💜 Terima kasih sudah support Zhuu!";
+    reply = "Untuk donasi, kunjungi: sociabuzz.com/zhuuvip/tribe 💜 Terima kasih sudah support Zhuu!";
   } else if (/beli|order|whatsapp|wa\.me/.test(lower)) {
-    reply = "Untuk order langsung, hubungi via WA: **wa.me/62882005730502** 📱";
+    reply = "Untuk order langsung, hubungi via WA: wa.me/62882005730502 📱";
   } else if (/komunitas|community|circle|vendetta|noire/.test(lower)) {
-    reply = "Gabung komunitas ZhuuVIP di WhatsApp: **chat.whatsapp.com/LC8ybe9WPZAEYO2lkmN4X4** 🔥";
+    reply = "Gabung komunitas ZhuuVIP di WhatsApp: chat.whatsapp.com/LC8ybe9WPZAEYO2lkmN4X4 🔥";
   } else if (/tools|tool/.test(lower)) {
-    reply = "Info Zhuu Tools di: **whatsapp.com/channel/0029VaXLuPM002TGAkbWtb3G** ⚡";
+    reply = "Info Zhuu Tools di: whatsapp.com/channel/0029VaXLuPM002TGAkbWtb3G ⚡";
   } else if (/halo|hai|hello|hi|hey/.test(lower)) {
     reply = "Halo! Saya Zhuu AI 🌊 Ada yang bisa saya bantu?";
   } else {
-    reply = "Maaf, saya sedang tidak bisa terhubung ke AI saat ini 🌊 Coba lagi dalam beberapa saat ya!";
+    reply = "Maaf, AI sedang tidak bisa dijangkau saat ini 🌊 Coba lagi sebentar ya!";
   }
 
   const words = reply.split(/(?<=\s)/);
