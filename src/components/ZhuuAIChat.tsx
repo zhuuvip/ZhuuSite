@@ -97,10 +97,12 @@ export default function ZhuuAIChat() {
             if (data === "[DONE]") continue;
             try {
               const parsed = JSON.parse(data);
-              const delta = parsed.choices?.[0]?.delta?.content || "";
-              full += delta;
-              setStreamingText(full);
-            } catch { full += data; setStreamingText(full); }
+              const delta = parsed.choices?.[0]?.delta?.content;
+              if (typeof delta === "string" && delta.length > 0) {
+                full += delta;
+                setStreamingText(full);
+              }
+            } catch { /* skip malformed chunks */ }
           }
         }
       }
