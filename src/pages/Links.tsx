@@ -78,7 +78,6 @@ export default function Links() {
           <p style={{ color: "rgba(0,200,220,0.5)" }}>Curated resources, tools, and useful links</p>
         </div>
 
-        {/* Search + Filter */}
         <div className="flex flex-col sm:flex-row gap-3 mb-8">
           <div className="relative flex-1">
             <span className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: "rgba(0,200,220,0.5)" }}>🔍</span>
@@ -106,7 +105,6 @@ export default function Links() {
           </div>
         </div>
 
-        {/* Link Cards */}
         <div className="space-y-8">
           {filtered.map((cat) => (
             <div key={cat.category}>

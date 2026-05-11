@@ -66,9 +66,7 @@ export default function Home() {
 
   return (
     <div className="ocean-bg min-h-screen pt-16 pb-24">
-      {/* Hero */}
       <section className="flex flex-col items-center justify-center min-h-[90vh] px-4 text-center relative">
-        {/* Glow orb */}
         <div style={{
           position: "absolute", top: "30%", left: "50%", transform: "translate(-50%, -50%)",
           width: 500, height: 500, borderRadius: "50%",
@@ -108,14 +106,12 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Scroll hint */}
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
           <span className="text-xs text-cyan-400" style={{ letterSpacing: "0.1em" }}>SCROLL</span>
           <div style={{ width: 1.5, height: 30, background: "linear-gradient(180deg, rgba(0,255,255,0.6), transparent)" }} />
         </div>
       </section>
 
-      {/* Stats */}
       <section className="px-4 pb-16">
         <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
           {STATS.map((stat) => (
@@ -128,10 +124,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Section Divider */}
       <div className="section-divider mx-auto max-w-3xl mb-16" />
 
-      {/* Features */}
       <section className="px-4 pb-20">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
@@ -157,7 +151,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA */}
       <section className="px-4 pb-20">
         <div className="max-w-2xl mx-auto text-center glass-card p-10">
           <div className="text-4xl mb-4">🌊</div>

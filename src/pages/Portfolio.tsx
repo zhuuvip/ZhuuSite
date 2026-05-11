@@ -56,7 +56,6 @@ export default function Portfolio() {
   return (
     <div className="ocean-bg min-h-screen pt-20 pb-28 px-4">
       <div className="max-w-5xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-3 mb-6">
             <div style={{ width: 70, height: 70, borderRadius: "50%", overflow: "hidden", border: "3px solid rgba(0,255,255,0.4)", boxShadow: "0 0 25px rgba(0,255,255,0.3)" }}>
@@ -69,7 +68,6 @@ export default function Portfolio() {
           </p>
         </div>
 
-        {/* Projects Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-14">
           {PROJECTS.map((p) => (
             <a key={p.title} href={p.link} style={{ textDecoration: "none" }}>
@@ -96,10 +94,8 @@ export default function Portfolio() {
           ))}
         </div>
 
-        {/* Section divider */}
         <div className="section-divider mb-14" />
 
-        {/* Skills */}
         <div className="glass-card p-8 mb-10">
           <h2 className="text-2xl font-black gradient-text mb-6" style={{ fontFamily: "Poppins, sans-serif" }}>Skills & Expertise</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -117,7 +113,6 @@ export default function Portfolio() {
           </div>
         </div>
 
-        {/* Contact CTA */}
         <div className="text-center glass-card p-8">
           <div className="text-3xl mb-3">🤝</div>
           <h3 className="text-xl font-bold gradient-text mb-2" style={{ fontFamily: "Poppins, sans-serif" }}>Want to collaborate?</h3>

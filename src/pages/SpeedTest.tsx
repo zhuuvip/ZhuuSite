@@ -8,7 +8,6 @@ function SpeedGauge({ value, max, label, unit, color }: { value: number; max: nu
   const pct = Math.min(value / max, 1);
   const r = 70;
   const circ = 2 * Math.PI * r;
-  const dashOffset = circ * (1 - pct * 0.75);
   const startAngle = 225;
 
   return (
