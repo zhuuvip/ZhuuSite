@@ -3,9 +3,8 @@ import { getDb } from "../db";
 const PW = process.env.ADMIN_PASSWORD || "zhuu2026admin";
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.headers["x-admin-token"] !== PW) return res.status(401).json({ error: "Unauthorized" });
-  const sql = getDb();
-  try {
-    if (req.method === "GET") res.json(await sql`SELECT * FROM feedback ORDER BY created_at`);
-    else res.status(405).end();
-  } catch (e: any) { res.status(500).json({ error: e.message }); }
+  if (req.method !== "PUT") return res.status(405).end();
+  const id = Number(req.query.id);
+  try { await getDb()`UPDATE feedback SET read=true WHERE id=${id}`; res.json({ success: true }); }
+  catch (e: any) { res.status(500).json({ error: e.message }); }
 }

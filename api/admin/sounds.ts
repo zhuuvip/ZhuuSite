@@ -1,20 +1,15 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { db, soundsTable } from "../_db";
-import { asc } from "drizzle-orm";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "zhuu2026admin";
-function auth(req: VercelRequest, res: VercelResponse): boolean {
-  if (req.headers["x-admin-token"] !== ADMIN_PASSWORD) { res.status(401).json({ error: "Unauthorized" }); return false; }
-  return true;
-}
+import { getDb } from "../db";
+const PW = process.env.ADMIN_PASSWORD || "zhuu2026admin";
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (!auth(req, res)) return;
+  if (req.headers["x-admin-token"] !== PW) return res.status(401).json({ error: "Unauthorized" });
+  const sql = getDb();
   try {
-    if (req.method === "GET") return res.json(await db.select().from(soundsTable).orderBy(asc(soundsTable.sortOrder)));
-    if (req.method === "POST") {
-      const { title, artist, url, cover, active, sortOrder } = req.body;
-      const [row] = await db.insert(soundsTable).values({ title, artist, url, cover, active, sortOrder }).returning();
-      return res.json(row);
-    }
-    res.status(405).end();
-  } catch { res.status(500).json({ error: "DB error" }); }
+    if (req.method === "GET") res.json(await sql`SELECT * FROM sounds ORDER BY sort_order`);
+    else if (req.method === "POST") {
+      const { title, artist, url, cover, active, sortOrder: sort_order } = req.body;
+      const [row] = await sql`INSERT INTO sounds (title,artist,url,cover,active,sort_order) VALUES (${title},${artist},${url},${cover},${active},${sort_order}) RETURNING *`;
+      res.json(row);
+    } else res.status(405).end();
+  } catch (e: any) { res.status(500).json({ error: e.message }); }
 }
