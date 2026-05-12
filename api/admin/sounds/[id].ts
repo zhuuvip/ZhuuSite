@@ -1,24 +1,16 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { db, soundsTable } from "../../_db";
-import { eq } from "drizzle-orm";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "zhuu2026admin";
-function auth(req: VercelRequest, res: VercelResponse): boolean {
-  if (req.headers["x-admin-token"] !== ADMIN_PASSWORD) { res.status(401).json({ error: "Unauthorized" }); return false; }
-  return true;
-}
+import { getDb } from "../../db";
+const PW = process.env.ADMIN_PASSWORD || "zhuu2026admin";
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (!auth(req, res)) return;
-  const id = parseInt(req.query.id as string);
+  if (req.headers["x-admin-token"] !== PW) return res.status(401).json({ error: "Unauthorized" });
+  const sql = getDb(); const id = Number(req.query.id);
   try {
     if (req.method === "PUT") {
-      const { title, artist, url, cover, active, sortOrder } = req.body;
-      const [row] = await db.update(soundsTable).set({ title, artist, url, cover, active, sortOrder }).where(eq(soundsTable.id, id)).returning();
-      return res.json(row);
-    }
-    if (req.method === "DELETE") {
-      await db.delete(soundsTable).where(eq(soundsTable.id, id));
-      return res.json({ success: true });
-    }
-    res.status(405).end();
-  } catch { res.status(500).json({ error: "DB error" }); }
+      const { title, artist, url, cover, active, sortOrder: sort_order } = req.body;
+      const [row] = await sql`UPDATE sounds SET title=${title},artist=${artist},url=${url},cover=${cover},active=${active},sort_order=${sort_order} WHERE id=${id} RETURNING *`;
+      res.json(row);
+    } else if (req.method === "DELETE") {
+      await sql`DELETE FROM sounds WHERE id=${id}`; res.json({ success: true });
+    } else res.status(405).end();
+  } catch (e: any) { res.status(500).json({ error: e.message }); }
 }
