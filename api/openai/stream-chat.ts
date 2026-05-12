@@ -38,14 +38,14 @@ function hasImage(messages: Msg[]): boolean {
 async function tryOpenAI(messages: Msg[], apiKey: string, baseUrl: string, res: VercelResponse): Promise<boolean> {
   try {
     const response = await fetch(`${baseUrl}/chat/completions`, {
-      method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
       body: JSON.stringify({ model: "gpt-4o-mini", messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages], stream: true, max_tokens: 1500 }),
     });
     if (!response.ok || !response.body) return false;
     for await (const chunk of response.body as unknown as AsyncIterable<Uint8Array>) {
-      for (const line of new TextDecoder().decode(chunk, { stream: true }).split("\n")) {
+      for (const line of new TextDecoder().decode(chunk, { stream: true }).split("\n"))
         if (line.startsWith("data: ")) writeSSE(res, line.slice(6));
-      }
     }
     writeSSE(res, "[DONE]"); res.end(); return true;
   } catch { return false; }
@@ -76,15 +76,8 @@ async function tryGemini(messages: Msg[], apiKey: string, res: VercelResponse): 
   } catch { return false; }
 }
 
-async function tryReplitAI(messages: Msg[], res: VercelResponse): Promise<boolean> {
-  const baseUrl = process.env.AI_INTEGRATIONS_OPENAI_BASE_URL;
-  const apiKey = process.env.AI_INTEGRATIONS_OPENAI_API_KEY;
-  if (!baseUrl || !apiKey) return false;
-  return tryOpenAI(messages, apiKey, baseUrl, res);
-}
-
 function streamVisionUnavailable(res: VercelResponse): void {
-  const msg = "Saya bisa melihat gambar yang kamu kirim, tapi untuk menganalisisnya saya perlu API key vision. Tolong ceritakan apa yang ada di gambar tersebut dan saya akan membantu! 🌊";
+  const msg = "Saya bisa melihat gambar yang kamu kirim, tapi untuk menganalisisnya saya perlu API key vision (OpenAI atau Gemini). Tolong ceritakan apa yang ada di gambar tersebut dan saya akan membantu! 🌊";
   let i = 0; const words = msg.split(/(?<=\s)/);
   const send = () => { if (i >= words.length) { writeSSE(res, "[DONE]"); res.end(); return; } sendToken(res, words[i++]); setTimeout(send, 18); };
   send();
@@ -102,6 +95,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const OPENAI_KEY = process.env.OPENAI_API_KEY;
   const OPENAI_BASE = process.env.OPENAI_BASE_URL ?? "https://api.openai.com/v1";
   const GEMINI_KEY = process.env.GEMINI_API_KEY;
+  const REPLIT_AI_BASE = process.env.AI_INTEGRATIONS_OPENAI_BASE_URL;
+  const REPLIT_AI_KEY = process.env.AI_INTEGRATIONS_OPENAI_API_KEY;
   if (imagePresent) {
     if (OPENAI_KEY && await tryOpenAI(recentMsgs, OPENAI_KEY, OPENAI_BASE, res)) return;
     if (GEMINI_KEY && await tryGemini(recentMsgs, GEMINI_KEY, res)) return;
@@ -109,7 +104,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
   if (OPENAI_KEY && await tryOpenAI(recentMsgs, OPENAI_KEY, OPENAI_BASE, res)) return;
   if (GEMINI_KEY && await tryGemini(recentMsgs, GEMINI_KEY, res)) return;
-  if (await tryReplitAI(recentMsgs, res)) return;
-  sendToken(res, "Maaf, AI sedang tidak dapat dijangkau. Silakan coba lagi sebentar! 🌊");
+  if (REPLIT_AI_BASE && REPLIT_AI_KEY && await tryOpenAI(recentMsgs, REPLIT_AI_KEY, REPLIT_AI_BASE, res)) return;
+  sendToken(res, "Maaf, AI sedang tidak dapat dijangkau. Silakan tambahkan OPENAI_API_KEY atau GEMINI_API_KEY ke environment Vercel! 🌊");
   writeSSE(res, "[DONE]"); res.end();
 }
